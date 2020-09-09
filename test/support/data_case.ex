@@ -16,22 +16,25 @@ defmodule GeoTracker.DataCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       alias GeoTracker.Repo
+      alias Ecto.{Changeset, Query}
 
       import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
+      import Changeset
+      import Query
       import GeoTracker.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(GeoTracker.Repo)
+    :ok = Sandbox.checkout(GeoTracker.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(GeoTracker.Repo, {:shared, self()})
+      Sandbox.mode(GeoTracker.Repo, {:shared, self()})
     end
 
     :ok

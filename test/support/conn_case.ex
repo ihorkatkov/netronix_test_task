@@ -17,25 +17,28 @@ defmodule GeoTrackerWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       # Import conveniences for testing with connections
+      alias GeoTrackerWeb.{ConnCase, Endpoint, Router}
       import Plug.Conn
       import Phoenix.ConnTest
-      import GeoTrackerWeb.ConnCase
+      import ConnCase
 
-      alias GeoTrackerWeb.Router.Helpers, as: Routes
+      alias Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint GeoTrackerWeb.Endpoint
+      @endpoint Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(GeoTracker.Repo)
+    :ok = Sandbox.checkout(GeoTracker.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(GeoTracker.Repo, {:shared, self()})
+      Sandbox.mode(GeoTracker.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

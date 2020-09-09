@@ -10,6 +10,8 @@ defmodule GeoTracker.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
+      dialyzer: dialyzer(),
+      preferred_cli_env: preferred_cli_env(),
       deps: deps()
     ]
   end
@@ -21,6 +23,22 @@ defmodule GeoTracker.MixProject do
     [
       mod: {GeoTracker.Application, []},
       extra_applications: [:logger, :runtime_tools]
+    ]
+  end
+
+  defp preferred_cli_env do
+    [
+      dialyzer: :test,
+      coveralls: :test
+    ]
+  end
+
+  defp dialyzer do
+    [
+      flags: [:error_handling, :race_conditions, :underspecs],
+      plt_add_deps: :app_tree,
+      plt_add_apps: [:ex_unit, :mix],
+      plt_core_path: "_build/#{Mix.env()}"
     ]
   end
 
@@ -42,7 +60,9 @@ defmodule GeoTracker.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
