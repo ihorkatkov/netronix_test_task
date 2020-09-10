@@ -10,6 +10,8 @@ use Mix.Config
 config :geo_tracker,
   ecto_repos: [GeoTracker.Repo]
 
+config :geo_tracker, GeoTracker.Repo, types: GeoTracker.PostgresTypes
+
 # Configures the endpoint
 config :geo_tracker, GeoTrackerWeb.Endpoint,
   url: [host: "localhost"],

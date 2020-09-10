@@ -10,6 +10,7 @@ config :geo_tracker, GeoTracker.Repo,
   password: "postgres",
   database: "geo_tracker_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
+  types: GeoTracker.PostgresTypes,
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,

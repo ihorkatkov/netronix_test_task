@@ -7,6 +7,7 @@ defmodule GeoTrackerWeb.Router do
 
   scope "/api", GeoTrackerWeb do
     pipe_through :api
+    resources "/tasks", TaskController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development
