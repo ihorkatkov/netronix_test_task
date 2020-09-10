@@ -15,24 +15,27 @@ defmodule GeoTrackerWeb.ChannelCase do
   this option is not recommended for other databases.
   """
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   use ExUnit.CaseTemplate
 
   using do
     quote do
+      alias GeoTrackerWeb.{ChannelCase, Endpoint}
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import GeoTrackerWeb.ChannelCase
+      import ChannelCase
 
       # The default endpoint for testing
-      @endpoint GeoTrackerWeb.Endpoint
+      @endpoint Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(GeoTracker.Repo)
+    :ok = Sandbox.checkout(GeoTracker.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(GeoTracker.Repo, {:shared, self()})
+      Sandbox.mode(GeoTracker.Repo, {:shared, self()})
     end
 
     :ok
