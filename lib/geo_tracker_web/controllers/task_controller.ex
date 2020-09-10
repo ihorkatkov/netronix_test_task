@@ -5,7 +5,6 @@ defmodule GeoTrackerWeb.TaskController do
   use GeoTrackerWeb, :controller
 
   alias GeoTracker.Tasks
-  alias GeoTracker.Tasks.Task
 
   action_fallback GeoTrackerWeb.FallbackController
 
