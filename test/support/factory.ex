@@ -1,4 +1,7 @@
 defmodule GeoTracker.Factory do
+  @moduledoc """
+  Fixtures factory
+  """
   use ExMachina.Ecto, repo: GeoTracker.Repo
 
   alias GeoTracker.Users.User
