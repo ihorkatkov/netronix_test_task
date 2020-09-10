@@ -63,6 +63,16 @@ defmodule GeoTracker.TasksTest do
       assert task == Tasks.get_task!(task.id)
     end
 
+    test "update_task/2 returns an error when status change is not permitted" do
+      task = task_fixture()
+      params = @valid_attrs |> Map.put(:status, "done")
+
+      assert {:error, %Ecto.Changeset{errors: [status: {status_error, _rest}]}} =
+               Tasks.update_task(task, params)
+
+      assert status_error =~ "not permitted status change. Valid values are"
+    end
+
     test "delete_task/1 deletes the task" do
       task = task_fixture()
       assert {:ok, %Task{}} = Tasks.delete_task(task)

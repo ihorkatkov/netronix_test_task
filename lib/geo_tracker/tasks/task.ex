@@ -16,6 +16,10 @@ defmodule GeoTracker.Tasks.Task do
     timestamps()
   end
 
+  def status_transition_rules do
+    %{"new" => ["assigned"], "assigned" => ["done"], "done" => []}
+  end
+
   @doc false
   def changeset(task, attrs) do
     task
@@ -27,5 +31,18 @@ defmodule GeoTracker.Tasks.Task do
   def update_changeset(task, attrs) do
     task
     |> changeset(attrs)
+    |> validate_status_change()
+  end
+
+  def validate_status_change(changeset) do
+    validate_change(changeset, :status, fn :status, status ->
+      next_valid_statuses = Map.get(status_transition_rules(), changeset.data.status)
+
+      if status in next_valid_statuses do
+        []
+      else
+        [status: "not permitted status change. Valid values are #{inspect(next_valid_statuses)}"]
+      end
+    end)
   end
 end
