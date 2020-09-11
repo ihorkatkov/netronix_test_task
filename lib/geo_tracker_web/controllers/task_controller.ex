@@ -5,6 +5,7 @@ defmodule GeoTrackerWeb.TaskController do
   use GeoTrackerWeb, :controller
 
   alias GeoTracker.Tasks
+  alias GeoTrackerWeb.Params
 
   action_fallback GeoTrackerWeb.FallbackController
 
@@ -14,18 +15,9 @@ defmodule GeoTrackerWeb.TaskController do
   end
 
   def create(conn, payload) do
-    params = %{
-      pickup_location: coordinates_to_geo_point(payload["pickup_location"]),
-      dropoff_location: coordinates_to_geo_point(payload["dropoff_location"])
-    }
-
-    case Tasks.create_task(params) do
-      {:ok, task} -> render(conn, "task.json", task: task)
-      {:error, error} -> render(conn, "error.json", error: error)
+    with {:ok, params} <- Params.CreateTask.to_valid_attrs(payload),
+         {:ok, task} <- Tasks.create_task(params) do
+      render(conn, "task.json", task: task)
     end
-  end
-
-  defp coordinates_to_geo_point(%{"lat" => lat, "long" => long}) do
-    %Geo.Point{coordinates: {lat, long}}
   end
 end

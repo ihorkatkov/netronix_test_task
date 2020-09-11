@@ -66,7 +66,8 @@ defmodule GeoTracker.MixProject do
       {:elixir_uuid, "~> 1.2"},
       {:geo, "~> 3.1.0"},
       {:geo_postgis, "~> 3.1.0"},
-      {:ex_machina, "~> 2.4", only: :test}
+      {:ex_machina, "~> 2.4", only: :test},
+      {:params, "~> 2.0"}
     ]
   end
 

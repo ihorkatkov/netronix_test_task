@@ -51,5 +51,22 @@ defmodule GeoTrackerWeb.TaskControllerTest do
                "status" => "new"
              } = json_response(conn, 200)
     end
+
+    test "returns an appropriate error when request payload is invalid", %{
+      conn: conn,
+      manager: manager
+    } do
+      conn =
+        conn
+        |> put_req_header("x-api-key", manager.api_key)
+        |> post(Routes.task_path(conn, :create), %{})
+
+      assert %{
+               "errors" => %{
+                 "dropoff_location" => ["can't be blank"],
+                 "pickup_location" => ["can't be blank"]
+               }
+             } = json_response(conn, 422)
+    end
   end
 end
