@@ -4,7 +4,16 @@ defmodule GeoTracker.Factory do
   """
   use ExMachina.Ecto, repo: GeoTracker.Repo
 
+  alias GeoTracker.Tasks.Task
   alias GeoTracker.Users.User
+
+  def task_factory do
+    %Task{
+      pickup_location: %Geo.Point{coordinates: {1.0, 1.0}},
+      dropoff_location: %Geo.Point{coordinates: {1.1, 1.1}},
+      status: "new"
+    }
+  end
 
   def driver_factory do
     %User{

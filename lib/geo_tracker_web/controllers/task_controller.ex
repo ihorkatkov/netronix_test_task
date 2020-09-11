@@ -9,9 +9,19 @@ defmodule GeoTrackerWeb.TaskController do
 
   action_fallback GeoTrackerWeb.FallbackController
 
-  def index(conn, _params) do
-    tasks = Tasks.list_tasks()
-    render(conn, "index.json", tasks: tasks)
+  def new_nearest(conn, payload) do
+    case Params.Location.to_valid_attrs(payload) do
+      {:ok, location} ->
+        tasks =
+          location
+          |> Params.CreateTask.coordinates_to_geo_point()
+          |> Tasks.list_nearest_tasks("new")
+
+        render(conn, "index.json", tasks: tasks)
+
+      {:error, _error} = error ->
+        error
+    end
   end
 
   def create(conn, payload) do

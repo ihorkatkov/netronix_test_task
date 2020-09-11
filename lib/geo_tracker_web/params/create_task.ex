@@ -30,7 +30,7 @@ defmodule GeoTrackerWeb.Params.CreateTask do
     end
   end
 
-  defp coordinates_to_geo_point(%{lat: lat, long: long}) do
+  def coordinates_to_geo_point(%{lat: lat, long: long}) do
     %Geo.Point{coordinates: {lat, long}}
   end
 end

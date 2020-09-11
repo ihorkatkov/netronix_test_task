@@ -1,6 +1,7 @@
 defmodule GeoTracker.TasksTest do
   use GeoTracker.DataCase
 
+  alias GeoTracker.Factory
   alias GeoTracker.Tasks
 
   describe "tasks" do
@@ -25,6 +26,16 @@ defmodule GeoTracker.TasksTest do
         |> Tasks.create_task()
 
       task
+    end
+
+    test "list_nearest_tasks/2 returns all nearest tasks by given point and status" do
+      third_task = Factory.insert(:task, pickup_location: %Geo.Point{coordinates: {3.0, 3.0}})
+      second_task = Factory.insert(:task, pickup_location: %Geo.Point{coordinates: {2.0, 2.0}})
+      first_task = Factory.insert(:task)
+      Factory.insert(:task, status: "assigned")
+
+      assert [first_task, second_task, third_task] ==
+               Tasks.list_nearest_tasks(%Geo.Point{coordinates: {1.0, 1.0}}, "new")
     end
 
     test "list_tasks/0 returns all tasks" do

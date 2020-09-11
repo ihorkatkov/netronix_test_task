@@ -4,9 +4,26 @@ defmodule GeoTracker.Tasks do
   """
 
   import Ecto.Query, warn: false
+  import Geo.PostGIS
   alias GeoTracker.Repo
 
   alias GeoTracker.Tasks.Task
+
+  @doc """
+  Returns the list of nearest tasks by pickup location with a given status.
+
+  """
+  def list_nearest_tasks(point, status) do
+    query =
+      from task in Task,
+        select: %{task: task, dist: fragment("pickup_location <-> ? AS dist", ^point)},
+        where: task.status == ^status,
+        order_by: fragment("dist")
+
+    query
+    |> Repo.all()
+    |> Enum.map(&Map.get(&1, :task))
+  end
 
   @doc """
   Returns the list of tasks.
