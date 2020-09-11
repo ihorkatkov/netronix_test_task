@@ -4,7 +4,6 @@ defmodule GeoTracker.Tasks do
   """
 
   import Ecto.Query, warn: false
-  import Geo.PostGIS
   alias GeoTracker.Repo
 
   alias GeoTracker.Tasks.Task
@@ -41,18 +40,16 @@ defmodule GeoTracker.Tasks do
   @doc """
   Gets a single task.
 
-  Raises `Ecto.NoResultsError` if the Task does not exist.
-
   ## Examples
 
-      iex> get_task!(123)
+      iex> get_task(123)
       %Task{}
 
-      iex> get_task!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_task(456)
+      nil
 
   """
-  def get_task!(id), do: Repo.get!(Task, id)
+  def get_task(id), do: Repo.get(Task, id)
 
   @doc """
   Creates a task.

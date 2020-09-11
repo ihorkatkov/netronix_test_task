@@ -43,9 +43,9 @@ defmodule GeoTracker.TasksTest do
       assert Tasks.list_tasks() == [task]
     end
 
-    test "get_task!/1 returns the task with given id" do
+    test "get_task/1 returns the task with given id" do
       task = task_fixture()
-      assert Tasks.get_task!(task.id) == task
+      assert Tasks.get_task(task.id) == task
     end
 
     test "create_task/1 with valid data creates a task" do
@@ -71,7 +71,7 @@ defmodule GeoTracker.TasksTest do
     test "update_task/2 with invalid data returns error changeset" do
       task = task_fixture()
       assert {:error, %Ecto.Changeset{}} = Tasks.update_task(task, @invalid_attrs)
-      assert task == Tasks.get_task!(task.id)
+      assert task == Tasks.get_task(task.id)
     end
 
     test "update_task/2 returns an error when status change is not permitted" do
@@ -87,7 +87,7 @@ defmodule GeoTracker.TasksTest do
     test "delete_task/1 deletes the task" do
       task = task_fixture()
       assert {:ok, %Task{}} = Tasks.delete_task(task)
-      assert_raise Ecto.NoResultsError, fn -> Tasks.get_task!(task.id) end
+      refute Tasks.get_task(task.id)
     end
 
     test "change_task/1 returns a task changeset" do

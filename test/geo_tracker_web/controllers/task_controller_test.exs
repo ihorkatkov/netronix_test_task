@@ -17,6 +17,51 @@ defmodule GeoTrackerWeb.TaskControllerTest do
      conn: put_req_header(conn, "accept", "application/json"), driver: driver, manager: manager}
   end
 
+  describe "update" do
+    test "returns forbidden when the user isn't authorized", %{conn: conn} do
+      conn = put(conn, Routes.task_path(conn, :update, 0), %{})
+
+      assert json_response(conn, 401) == %{"errors" => %{"api_key" => ["api_key_missing"]}}
+    end
+
+    test "returns forbidden when a user is not driver", %{conn: conn, manager: manager} do
+      conn =
+        conn
+        |> put_req_header("x-api-key", manager.api_key)
+        |> put(Routes.task_path(conn, :update, 0), %{})
+
+      assert json_response(conn, 401) == %{"errors" => %{"api_key" => ["not_permitted"]}}
+    end
+
+    test "returns an error when request payload is invalid", %{conn: conn, driver: driver} do
+      conn =
+        conn
+        |> put_req_header("x-api-key", driver.api_key)
+        |> put(Routes.task_path(conn, :update, 0), %{})
+
+      assert %{
+               "errors" => %{
+                 "status" => ["can't be blank"]
+               }
+             } = json_response(conn, 400)
+    end
+
+    test "returns updated task", %{conn: conn, driver: driver} do
+      task = Factory.insert(:task)
+
+      conn =
+        conn
+        |> put_req_header("x-api-key", driver.api_key)
+        |> put(Routes.task_path(conn, :update, task.id), %{status: "assigned"})
+
+      assert %{
+               "dropoff_location" => %{"lat" => 1.1, "long" => 1.1},
+               "pickup_location" => %{"lat" => 1.0, "long" => 1.0},
+               "status" => "assigned"
+             } = json_response(conn, 200)
+    end
+  end
+
   describe "new_nearest" do
     test "returns forbidden when the user isn't authorized", %{conn: conn} do
       conn = get(conn, Routes.task_path(conn, :new_nearest), @location)
