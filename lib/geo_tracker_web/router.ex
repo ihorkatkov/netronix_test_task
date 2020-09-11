@@ -17,22 +17,17 @@ defmodule GeoTrackerWeb.Router do
     plug VerifyApiKey, user_role: "driver"
   end
 
-  scope "/api/tasks", GeoTrackerWeb do
+  scope "/api", GeoTrackerWeb do
     pipe_through :authed_manager
 
     post "/tasks", TaskController, :create
   end
 
-  scope "/api/tasks", GeoTrackerWeb do
+  scope "/api", GeoTrackerWeb do
     pipe_through :authed_driver
 
     get "/tasks", TaskController, :new_nearest
-  end
-
-  scope "/api", GeoTrackerWeb do
-    pipe_through :api
-
-    get "/tasks", TaskController, :index
+    put "/tasks/:id", TaskController, :update
   end
 
   # Enables LiveDashboard only for development

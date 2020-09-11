@@ -5,6 +5,7 @@ defmodule GeoTrackerWeb.TaskController do
   use GeoTrackerWeb, :controller
 
   alias GeoTracker.Tasks
+  alias GeoTracker.Tasks.Task
   alias GeoTrackerWeb.Params
 
   action_fallback GeoTrackerWeb.FallbackController
@@ -28,6 +29,17 @@ defmodule GeoTrackerWeb.TaskController do
     with {:ok, params} <- Params.CreateTask.to_valid_attrs(payload),
          {:ok, task} <- Tasks.create_task(params) do
       render(conn, "task.json", task: task)
+    end
+  end
+
+  def update(conn, payload) do
+    with {:ok, params} <- Params.UpdateTask.to_valid_attrs(payload),
+         %Task{} = task <- Tasks.get_task(params.id),
+         {:ok, task} <- Tasks.update_task(task, Map.take(params, [:status])) do
+      render(conn, "task.json", task: task)
+    else
+      nil -> {:error, :not_found}
+      error -> error
     end
   end
 end
