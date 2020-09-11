@@ -1,13 +1,27 @@
 defmodule GeoTrackerWeb.Router do
   use GeoTrackerWeb, :router
 
+  alias GeoTrackerWeb.Plugs.VerifyApiKey
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  pipeline :authed_manager do
+    plug :accepts, ["json"]
+    plug VerifyApiKey, user_role: "manager"
+  end
+
+  scope "/api/tasks", GeoTrackerWeb do
+    pipe_through :authed_manager
+
+    post "/tasks", TaskController, :create
+  end
+
   scope "/api", GeoTrackerWeb do
     pipe_through :api
-    resources "/tasks", TaskController, except: [:new, :edit]
+
+    get "/tasks", TaskController, :index
   end
 
   # Enables LiveDashboard only for development

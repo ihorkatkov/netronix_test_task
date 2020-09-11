@@ -10,8 +10,8 @@ defmodule GeoTrackerWeb.FallbackController do
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(GeoTrackerWeb.ChangesetView)
-    |> render("error.json", changeset: changeset)
+    |> put_view(GeoTrackerWeb.ErrorView)
+    |> render(:"400", changeset: changeset)
   end
 
   # This clause is an example of how to handle resources that cannot be found.

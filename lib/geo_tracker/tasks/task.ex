@@ -11,7 +11,7 @@ defmodule GeoTracker.Tasks.Task do
   schema "tasks" do
     field :dropoff_location, Geo.PostGIS.Geometry
     field :pickup_location, Geo.PostGIS.Geometry
-    field :status, :string
+    field :status, :string, default: "new"
 
     timestamps()
   end
